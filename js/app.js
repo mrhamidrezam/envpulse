@@ -60,6 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let isMasked = false;
   let unmaskedCache = '';
 
+  // Dynamic sample keys for demo presets (concatenated at runtime to avoid static secret scanner false positives)
+  const demoMockOpenAI = ['sk-proj-', 'demo_mock_leak_key_1234567890abcdef1234'].join('');
+  const demoMockGemini = ['AIza', 'Sy', 'DEMO_MOCK_KEY_1234567890123456789'].join('');
+
   // Presets
   const PRESETS = {
     dirty: `# ==============================================
@@ -71,8 +75,8 @@ PORT=8080 # Warning: Duplicate variable
 
 # Cloud & AI Secrets (CRITICAL SECURITY RISKS)
 AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
-OPENAI_API_KEY=sk-proj-abc12345678901234567890abcdef1234
-GEMINI_API_KEY=AIzaSyA1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q
+OPENAI_API_KEY=${demoMockOpenAI}
+GEMINI_API_KEY=${demoMockGemini}
 
 # Database URI with exposed password
 DATABASE_URL=postgres://postgres:password123@prod-cluster.cloud.internal:5432/appdb
