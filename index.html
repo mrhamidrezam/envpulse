@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EnvPulse — The Modern .env Studio & Security Linter</title>
+  <meta name="description" content="Zero-dependency client-side .env studio, security secret linter, multi-environment diff engine, and type-safe schema generator (Zod, Pydantic, K8s, Docker).">
+  <meta name="theme-color" content="#090d16">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <img src="assets/logo.svg" alt="EnvPulse Logo">
+        <div class="brand-text">
+          <h1>EnvPulse</h1>
+        </div>
+        <span class="brand-tag">v1.0.0</span>
+      </a>
+
+      <div class="header-actions">
+        <a href="https://github.com/mrhamidrezam/envpulse" target="_blank" rel="noopener noreferrer" class="btn-github">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h2>The Modern <span class="hero-gradient">.env Studio</span> & Security Linter</h2>
+    <p>Zero-dependency developer workbench to detect exposed secrets, audit syntax flaws, compare multi-environment configurations, and generate type-safe schemas.</p>
+    <div class="hero-badges">
+      <span class="pill-badge"><span class="dot"></span> 100% Client-Side Privacy</span>
+      <span class="pill-badge"><span class="dot"></span> Zero External Dependencies</span>
+      <span class="pill-badge"><span class="dot"></span> Zod & Pydantic V2 Ready</span>
+      <span class="pill-badge"><span class="dot"></span> Kubernetes & Docker Exporter</span>
+    </div>
+  </section>
+
+  <!-- Workspace -->
+  <main class="workspace">
+
+    <!-- Left Pane: Editor -->
+    <div class="pane">
+      <div class="pane-header">
+        <div class="pane-title">
+          <span>⚡ .env Editor</span>
+        </div>
+        <div class="pane-tools">
+          <select id="presetSelect" title="Select Preset">
+            <option value="dirty">Preset: Demo Vulnerabilities</option>
+            <option value="nextjs">Preset: Next.js + DB</option>
+            <option value="ai_fastapi">Preset: FastAPI + LLM</option>
+            <option value="microservice">Preset: Microservice (K8s)</option>
+          </select>
+          <button id="btnMaskToggle" title="Mask/Unmask sensitive values">🔒 Mask</button>
+          <button id="btnCopyEditor" title="Copy raw .env">📋 Copy</button>
+          <button id="btnDownload" class="btn-primary" title="Download .env">💾 Download</button>
+        </div>
+      </div>
+
+      <div class="editor-body">
+        <textarea id="envInput" class="env-textarea" placeholder="KEY=VALUE" spellcheck="false"></textarea>
+      </div>
+
+      <div class="editor-footer">
+        <span id="keyCount">Keys: 0</span>
+        <span id="lineCount">Lines: 0</span>
+        <span>Client-side only — secrets never leave your device</span>
+      </div>
+    </div>
+
+    <!-- Right Pane: Analysis & Studio Tabs -->
+    <div class="pane">
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="tab-linter">
+          🛡️ Security & Linter
+          <span id="tabLinterBadge" class="tab-badge">0 issues</span>
+        </button>
+        <button class="tab-btn" data-tab="tab-diff">
+          ⚖️ Diff & Sync
+        </button>
+        <button class="tab-btn" data-tab="tab-schemas">
+          📐 Type Schemas
+        </button>
+        <button class="tab-btn" data-tab="tab-exporters">
+          🚀 Infra Exporter
+        </button>
+        <button class="tab-btn" data-tab="tab-crypto">
+          🔑 Secret Studio
+        </button>
+      </nav>
+
+      <!-- TAB 1: Security & Linter -->
+      <div id="tab-linter" class="tab-content active">
+        <div class="score-overview">
+          <div id="scoreCircle" class="score-circle">
+            <span id="scoreValue">100</span>
+          </div>
+          <div class="score-stats">
+            <div class="stat-item">
+              <span class="stat-label">Critical Leaks</span>
+              <span id="statCritical" class="stat-value" style="color: var(--accent-rose);">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Warnings</span>
+              <span id="statWarning" class="stat-value" style="color: var(--accent-amber);">0</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Hygiene Notes</span>
+              <span id="statInfo" class="stat-value" style="color: var(--accent-cyan);">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="issuesList" class="issues-list"></div>
+      </div>
+
+      <!-- TAB 2: Diff & Sync -->
+      <div id="tab-diff" class="tab-content">
+        <div class="diff-container">
+          <div class="diff-inputs">
+            <div class="diff-input-group">
+              <label for="diffTargetInput">Comparison Environment (e.g. .env.example or .env.staging):</label>
+              <textarea id="diffTargetInput" class="diff-target-textarea" placeholder="Paste target .env or click Generate .env.example below..." spellcheck="false"></textarea>
+            </div>
+          </div>
+
+          <div class="diff-summary-card">
+            <span id="diffParityBadge" class="tab-badge">0% Parity</span>
+            <div style="display: flex; gap: 0.5rem;">
+              <button id="btnGenExample" class="btn-accent">✨ Generate .env.example</button>
+              <button id="btnRunDiff" class="btn-primary">🔄 Compare</button>
+            </div>
+          </div>
+
+          <pre id="diffResultOutput" class="code-output" style="min-height: 200px;">Click Compare to analyze environment parity...</pre>
+        </div>
+      </div>
+
+      <!-- TAB 3: Schemas -->
+      <div id="tab-schemas" class="tab-content">
+        <div class="code-container">
+          <div class="code-toolbar">
+            <select id="schemaTypeSelect">
+              <option value="zod">TypeScript (Zod Schema)</option>
+              <option value="ts_types">TypeScript (ProcessEnv Types)</option>
+              <option value="pydantic">Python (Pydantic V2 Settings)</option>
+              <option value="go">Go (Struct with tags)</option>
+              <option value="rust">Rust (Serde / Envy)</option>
+            </select>
+            <button id="btnCopySchema" class="btn-primary">📋 Copy Schema</button>
+          </div>
+          <pre id="schemaCodeOutput" class="code-output"></pre>
+        </div>
+      </div>
+
+      <!-- TAB 4: Exporters -->
+      <div id="tab-exporters" class="tab-content">
+        <div class="code-container">
+          <div class="code-toolbar">
+            <select id="exportFormatSelect">
+              <option value="k8s_secret">Kubernetes Secret (YAML)</option>
+              <option value="k8s_secret_b64">Kubernetes Secret (Base64 data)</option>
+              <option value="k8s_configmap">Kubernetes ConfigMap (YAML)</option>
+              <option value="docker_compose">Docker Compose (environment:)</option>
+              <option value="terraform">Terraform (terraform.tfvars)</option>
+              <option value="shell">Bash Script (export KEY=...)</option>
+              <option value="json">JSON Object</option>
+              <option value="yaml">Clean YAML</option>
+              <option value="gh_secrets">GitHub CLI (gh secret set)</option>
+            </select>
+            <button id="btnCopyExport" class="btn-primary">📋 Copy Export</button>
+          </div>
+          <pre id="exportCodeOutput" class="code-output"></pre>
+        </div>
+      </div>
+
+      <!-- TAB 5: Secret Studio -->
+      <div id="tab-crypto" class="tab-content">
+        <div class="sec-gen-grid">
+          <div class="sec-gen-item">
+            <div class="sec-gen-header">
+              <span>JWT Secret (256-bit Hex)</span>
+              <button id="btnGenJwt" class="btn-primary">🔄 Re-roll & Copy</button>
+            </div>
+            <div class="sec-gen-result">
+              <input type="text" id="inputGenJwt" class="sec-gen-input" readonly>
+            </div>
+          </div>
+
+          <div class="sec-gen-item">
+            <div class="sec-gen-header">
+              <span>AES-256 Key (Base64)</span>
+              <button id="btnGenAes" class="btn-primary">🔄 Re-roll & Copy</button>
+            </div>
+            <div class="sec-gen-result">
+              <input type="text" id="inputGenAes" class="sec-gen-input" readonly>
+            </div>
+          </div>
+
+          <div class="sec-gen-item">
+            <div class="sec-gen-header">
+              <span>UUID v4 Identifier</span>
+              <button id="btnGenUuid" class="btn-primary">🔄 Re-roll & Copy</button>
+            </div>
+            <div class="sec-gen-result">
+              <input type="text" id="inputGenUuid" class="sec-gen-input" readonly>
+            </div>
+          </div>
+
+          <div class="sec-gen-item">
+            <div class="sec-gen-header">
+              <span>High-Entropy Password (24 chars)</span>
+              <button id="btnGenPass" class="btn-primary">🔄 Re-roll & Copy</button>
+            </div>
+            <div class="sec-gen-result">
+              <input type="text" id="inputGenPass" class="sec-gen-input" readonly>
+            </div>
+          </div>
+
+          <div class="sec-gen-item">
+            <div class="sec-gen-header">
+              <span>API Key (`sk_live_...`)</span>
+              <button id="btnGenApiKey" class="btn-primary">🔄 Re-roll & Copy</button>
+            </div>
+            <div class="sec-gen-result">
+              <input type="text" id="inputGenApiKey" class="sec-gen-input" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast">Copied to clipboard!</div>
+
+  <!-- Footer -->
+  <footer>
+    <p>EnvPulse Studio · Built with 100% client-side privacy · Open Source under MIT License · <a href="https://github.com/mrhamidrezam/envpulse" target="_blank" rel="noopener noreferrer">GitHub Repository</a></p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/parser.js"></script>
+  <script src="js/linter.js"></script>
+  <script src="js/diff.js"></script>
+  <script src="js/generators.js"></script>
+  <script src="js/converters.js"></script>
+  <script src="js/crypto.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
